@@ -9,8 +9,18 @@
     $f_date = mysqli_real_escape_string($conn, $_POST['form_date']);
 
     //prepared statements
+    $sql = "INSERT INTO users (username, password, firstname, lastname, created) VALUES (?, ?, ?, ?, ?);";
+    $stmt = mysqli_stmt_init($conn);
+    // Prepare the prepare statement
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        echo "SQL error";
+    } else{
+        mysqli_stmt_bind_param($stmt, "sssss", $f_username, $f_password, $f_first, $f_last, $f_date);
+        mysqli_stmt_execute($stmt);
+    }
 
 
-    $sql = "INSERT INTO users (username, password, firstname, lastname, created) VALUES ('$f_username', '$f_password', '$f_first', '$f_last', '$f_date')";
-    mysqli_query($conn, $sql);
+    //without prepared statements
+    //$sql = "INSERT INTO users (username, password, firstname, lastname, created) VALUES ('$f_username', '$f_password', '$f_first', '$f_last', '$f_date')";
+    //mysqli_query($conn, $sql);
     header("location: ../index.php? signup=success"); // takes us to another file + optional success message
